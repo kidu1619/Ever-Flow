@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -120,7 +120,7 @@ const DEMO_ROLE_ACCOUNTS: DemoAccount[] = [
   },
 ];
 
-export default function RolesGatewayPage() {
+function RolesGatewayContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -508,7 +508,8 @@ export default function RolesGatewayPage() {
                       Currently Authenticated: <span className="underline">{currentUser.name}</span>
                     </div>
                     <div className="text-[11px] text-stone-600 mt-0.5">
-                      Role: <strong>{currentRole}</strong> • Workspace: <strong>{activeOrg?.name || "Event Workspace"}</strong>
+                      Role: <strong>{currentRole}</strong> · Workspace:{" "}
+                      <strong>{activeOrg?.name || "Event Workspace"}</strong>
                     </div>
                   </div>
                 </div>
@@ -742,7 +743,7 @@ export default function RolesGatewayPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 3: REGISTER NEW ORGANIZATION & ROLE ACCOUNT                           */}
+        {/* TAB 3: REGISTER NEW ORGANIZATION & ROLE ACCOUNT                          */}
         {/* ========================================================================= */}
         {activeTab === "custom-register" && (
           <div className="max-w-lg mx-auto bg-white rounded-3xl border border-stone-200/90 shadow-md p-8">
@@ -889,5 +890,19 @@ export default function RolesGatewayPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function RolesGatewayPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[#E06B53]" />
+        </div>
+      }
+    >
+      <RolesGatewayContent />
+    </Suspense>
   );
 }
